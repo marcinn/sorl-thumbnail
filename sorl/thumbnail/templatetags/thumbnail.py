@@ -123,6 +123,9 @@ class ThumbnailNode(ThumbnailNodeBase):
                 self.nodelist_empty = parser.parse(('endthumbnail',))
                 parser.delete_first_token()
 
+    def _get_thumbnail(self, file_, geometry, **options):
+        return get_thumbnail(file_, geometry, **options)
+
     def _render(self, context):
         file_ = self.file_.resolve(context)
         geometry = self.geometry.resolve(context)
@@ -135,7 +138,7 @@ class ThumbnailNode(ThumbnailNodeBase):
             else:
                 options[key] = value
 
-        thumbnail = get_thumbnail(file_, geometry, **options)
+        thumbnail = self._get_thumbnail(file_, geometry, **options)
 
         if not thumbnail or (isinstance(thumbnail, DummyImageFile) and self.nodelist_empty):
             if self.nodelist_empty:

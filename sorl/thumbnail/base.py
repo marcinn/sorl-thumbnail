@@ -74,8 +74,10 @@ class ThumbnailBackend(object):
         """
         logger.debug('Getting thumbnail for file [%s] at [%s]', file_, geometry_string)
 
+        storage = options.pop('storage', default.storage)
+
         if file_:
-            source = ImageFile(file_)
+            source = ImageFile(file_, storage=storage)
         elif settings.THUMBNAIL_DUMMY:
             return DummyImageFile(geometry_string)
         else:
@@ -97,7 +99,7 @@ class ThumbnailBackend(object):
                 options.setdefault(key, value)
 
         name = self._get_thumbnail_filename(source, geometry_string, options)
-        thumbnail = ImageFile(name, default.storage)
+        thumbnail = ImageFile(name, storage)
         cached = default.kvstore.get(thumbnail)
 
         if cached:
